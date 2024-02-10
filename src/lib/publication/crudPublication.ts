@@ -1,20 +1,43 @@
 import { db, storage } from '../firebase/firebase';
 import { doc, setDoc, getDocs, updateDoc, collection, Timestamp, deleteDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject   } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { navigate } from 'svelte-routing';
 import type { Publication } from '../../table';
-import toast, {Toaster} from 'svelte-french-toast';
-import { onMount } from 'svelte';
+import toast from 'svelte-french-toast';
+import { loading } from '../store/store';
 
 
 let userId: string,
     imageOfPublication: any;
 
-
-export const createPublication = async (data: Publication, editorData: any, imagePublication: File, name: string) => {
+export const createPublication = async (data: Publication, editorData: any, title: string, imagePublication: File, name: string) => {
    userId = data.userId
     editorData.save().then((outputData: any) => {
-        imageOfPublication = ref(storage, `Publications/imageOfPublication/${data.userId}/${imagePublication.name}`);
+        loading.set(true);
+        if(!imagePublication) {
+            const docRef = doc(collection(db, "publications"));
+            setDoc(docRef, {
+                id: docRef.id,
+                authorId: data.userId,
+                title: title,
+                imagePublication: imagePublication,
+                tags: data.tags,
+                content: outputData,
+                describe: data.describe,
+                date: Timestamp.fromDate(new Date())  
+            })
+            .then(() => {
+                editorData.clear();
+                loading.set(false);
+                toast.success('Edtion effectuée!');
+                return new Promise(resolve => setTimeout(resolve, 1000));    
+            })
+            .then(()=>{
+                navigate(`/user/${name}`, { replace: true }); 
+            })
+        }
+        else {
+            imageOfPublication = ref(storage, `Publications/imageOfPublication/${data.userId}/${imagePublication.name}`);
         uploadBytes(imageOfPublication, imagePublication)
         .then(()=>{
             getDownloadURL(imageOfPublication).then((url: any)=>{
@@ -23,20 +46,25 @@ export const createPublication = async (data: Publication, editorData: any, imag
                 setDoc(docRef, {
                     id: docRef.id,
                     authorId: data.userId,
-                    title: data.title,
+                    title: title,
                     imagePublication: image,
                     tags: data.tags,
                     content: outputData,
                     describe: data.describe,
                     date: Timestamp.fromDate(new Date())  
-                }).then(() => {
-                    data.title = '';
-                    data.describe = '';
-                    editorData.clear()
+                })
+                .then(() => {
+                    editorData.clear();
+                    loading.set(false);
+                    toast.success('Edtion effectuée avec succes!');
+                    return new Promise(resolve => setTimeout(resolve, 1000));                    
+                })
+                .then(()=>{
                     navigate(`/user/${name}`, { replace: true }); 
                 })
             })
-        })    
+        }) 
+        }    
     })
 }
 
@@ -53,7 +81,8 @@ export const getPublicationAuthor = async () => {
     return newPublications    
 }
 
-export const updatePublication = async (data: Publication, editor: any, title: string, name: string, id: string, loading: boolean) => {    
+export const updatePublication = async (data: Publication, editor: any, title: string, name: string, id: string) => {    
+    loading.set(true);
     editor.save()
     .then(async (outputData: any) => {
         if(typeof data.imagePublication !== 'object') {
@@ -66,12 +95,13 @@ export const updatePublication = async (data: Publication, editor: any, title: s
                 date: Timestamp.fromDate(new Date()) 
             })
             .then(()=>{
-                toast.success('Modifcation de la publication effectuée!');
+                loading.set(false);
+                toast.success('Mise à jour effectuée avec succes!');
                 return new Promise(resolve => setTimeout(resolve, 1000));
             })
             .then(()=>{
                 navigate(`/user/${name}`, { replace: true });
-            }) 
+            })
         }  
         else {
             imageOfPublication = ref(storage, `Publications/imageOfPublication/${data.userId}/${data.imagePublication.name}`);
@@ -88,12 +118,22 @@ export const updatePublication = async (data: Publication, editor: any, title: s
                         describe: data.describe,
                         date: Timestamp.fromDate(new Date()) 
                     }).then(()=>{
-                        navigate(`/user/${name}`, { replace: true });
+                        loading.set(false);
+                        toast.success('Modifcation de la publication effectuée!');
+                        return new Promise(resolve => setTimeout(resolve, 1000));
                     })
+                    .then(()=>{
+                        navigate(`/user/${name}`, { replace: true });
+                    }) 
                 })
-            })            
+            }).catch((error)=>{
+                toast.error("Une erreur s'est produite veuillez reessayer.")
+            })             
         }    
-    })       
+    }).catch((error)=>{
+        toast.error("Une erreur s'est produite veuillez reessayer.")
+        console.error(error)
+    })          
 }
 
 export const deletePublication = async (id: string) => {

@@ -3,7 +3,6 @@
     import { getUser } from '../firebase/account/user/userInfos';
     import { createPublication, updatePublication } from '../publication/crudPublication';
     import ErrorMessage from '../component/errorMessage.svelte';
-    import loadingButton from '../component/loadingButton.svelte';
     import LoadingButton from '../component/loadingButton.svelte';
 
     // declare props
@@ -23,7 +22,6 @@
     let name: string;
     let tag: string = '';
     let value: string = '';
-    let loading: boolean = false;
 
     let dataPublication: any = {
         imagePublication: imagePublication,
@@ -71,7 +69,8 @@
                     </div>
                     {:else}
                     <div class="relative rounded-xl overflow-hidden h-[200px] bg-slate-400">
-                        <img class="w-full h-full object-cover rounded-xl" src="https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80" alt="">
+                        <!-- svelte-ignore a11y-img-redundant-alt -->
+                        <img class="w-full h-full object-cover rounded-xl" src="https://www.rbspraytech.com/wp-content/uploads/2014/02/placeholder-860x567.jpg" alt="Placeholder image">
                     </div>
                     {/if}
                     <h3 class="text-lg leading-6 text-slate-500 font-medium mt-5">{title}</h3>
@@ -112,16 +111,16 @@
                         {/if}
                     </div>
                     {#if url}
-                        <button on:click={()=>{updatePublication({...dataPublication, describe, tags, userId}, editor, title, name, id, loading)}} class="flex rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <button on:click={()=>{updatePublication({...dataPublication, describe, tags, userId}, editor, title, name, id)}} 
+                            class="flex gap-1 rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Modifier
-                            {#if loading}  
-                                <LoadingButton {loading} />
-                            {/if}
+                            <LoadingButton  />
                         </button> 
                     {:else}
-                        <button on:click={()=>{createPublication({...dataPublication, describe, tags, userId}, editor, imagePublication, name)}} 
-                            class="inline-block rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <button on:click={()=>{createPublication({...dataPublication, describe, tags, userId}, editor, title, imagePublication, name)}} 
+                            class="flex gap-1 rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Publier
+                            <LoadingButton  />
                         </button>
                     {/if}
                 </div>

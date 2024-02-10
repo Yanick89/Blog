@@ -4,6 +4,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDocs, collection, doc, updateDoc  } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import type { User } from "../../../../table";
+import toast from 'svelte-french-toast';
+import { loading } from "../../../store/store";
 
 let userId: string
 
@@ -31,16 +33,33 @@ export const getUser = () => {
 };
 
 export const updateUser = async (updateData: Partial<User>, imageUrl: File) => {
-    const profileRef = ref(storage, `users/profile/${userId}/${imageUrl.name}`);
-    
-    await uploadBytes(profileRef, imageUrl)
-    .then((snapshot: any) => {
-        getDownloadURL(profileRef).then((url: any) => {
-            updateData.imageUrl = url;
-            updateDoc (doc(db, "users", userId), updateData);        
-            console.log('Uploaded a blob or file! Check Storage', updateData.imageUrl, updateData);
+    loading.set(true);
+    if(!imageUrl) {
+        updateDoc (doc(db, "users", userId), updateData)
+        .then(() => {
+            loading.set(false);
+            toast.success('Profile mise a jour avec success!',{
+                duration: 2000,
+            });
+        });
+    }
+    else{
+        const profileRef = ref(storage, `users/profile/${userId}/${imageUrl.name}`);
+        await uploadBytes(profileRef, imageUrl)
+        .then((snapshot: any) => {
+            getDownloadURL(profileRef)
+            .then((url: any) => {
+                updateData.imageUrl = url;
+                updateDoc (doc(db, "users", userId), updateData)
+                .then(() => {
+                    loading.set(false);
+                    toast.success('Profile mise a jour avec success!',{
+                        duration: 2000,
+                    });
+                });        
+        
+            })
         })
-    }), (error: any) => {
-        console.log(error);
-    };
+    }
+    
 }

@@ -3,6 +3,8 @@
     import Publication from "../../lib/account/publication.svelte"
     import EditorJS from '@editorjs/editorjs'
     import {toolsEditor, dataEditor} from "../../lib/editor/editorDatas"
+    import { Toaster } from 'svelte-french-toast';
+
     
     let url: string = window.location.pathname,
         title: string = '',
@@ -84,6 +86,7 @@
         </div>        
     </div>
 </div>
+<Toaster />
 
 {#if showDetails}
     <Publication {showDetails} {editor} {title} {imagePublication} {preview} {describe} {tags} on:close={() => showDetails = !showDetails}/>

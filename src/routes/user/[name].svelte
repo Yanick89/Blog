@@ -39,7 +39,11 @@
     <div class="mt-6 border-t border-gray-100 space-y-12 w-full">
         {#each publications as publication, i}
             <article class="flex items-start space-x-6 p-6">
-                <img src={publication.imagePublication} alt="" width="60" class="flex-none rounded-md bg-slate-100 min-h-[85px] aspect-[3/4] object-cover" />
+                {#if publication.imagePublication}
+                    <img src={publication.imagePublication} alt="" width="60" class="flex-none rounded-md bg-slate-100 min-h-[85px] aspect-[3/4] object-cover" />
+                {:else}
+                    <img src=https://www.rbspraytech.com/wp-content/uploads/2014/02/placeholder-860x567.jpg} alt="" width="60" class="flex-none rounded-md bg-slate-100 min-h-[85px] aspect-[3/4] object-cover" />
+                {/if}
                 <div class="min-w-0 relative flex-auto">
                 <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2>
                 <dl class="mt-2 flex flex-wrap flex-1 text-sm leading-6 font-medium">

@@ -1,6 +1,8 @@
 <script lang="ts">
     import { getUser, updateUser } from "../firebase/account/user/userInfos";
     import PhotoProfile from "./photoProfile.svelte";
+    import LoadingButton from "../component/loadingButton.svelte";
+    import { Toaster } from 'svelte-french-toast';
     
     let inputFile : any;
     let imageUrl: any = '';
@@ -127,10 +129,14 @@
             </div>
         </div>   
         <div class="flex items-center justify-end gap-x-6">
-            <button on:click={()=>{ updateUser(datasUser, imageName)}} class="bg-gray-700 text-white mb-6 hover:bg-gray-500 rounded-md px-3 py-2 text-sm font-medium">Modifier</button>
+            <button on:click={()=>{ updateUser(datasUser, imageName)}} class="flex gap-1 rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Modifier
+                <LoadingButton />
+            </button>
         </div>
     </div>
 </form>
+<Toaster />
 
 <style>
     .change{
