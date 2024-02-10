@@ -3,6 +3,8 @@
     import { getUser } from '../firebase/account/user/userInfos';
     import { createPublication, updatePublication } from '../publication/crudPublication';
     import ErrorMessage from '../component/errorMessage.svelte';
+    import loadingButton from '../component/loadingButton.svelte';
+    import LoadingButton from '../component/loadingButton.svelte';
 
     // declare props
     export let showDetails: boolean;
@@ -21,6 +23,7 @@
     let name: string;
     let tag: string = '';
     let value: string = '';
+    let loading: boolean = false;
 
     let dataPublication: any = {
         imagePublication: imagePublication,
@@ -45,10 +48,9 @@
     const removeTag = (tag: string) =>{
         tags = tags.filter((t: string) => t !== tag)
     }
-
+    
 
 </script>
-
 <div class="details min-h-screen w-full bg-white fixed top-0 left-0 right-0 bottom-0 z-20">
     <div class="mx-auto h-full max-w-7xl px-2 sm:px-6 lg:px-8">
         <div class="flex justify-end mt-8">
@@ -110,8 +112,11 @@
                         {/if}
                     </div>
                     {#if url}
-                        <button on:click={()=>{updatePublication({...dataPublication, describe, tags, userId}, editor, title, id)}} class="inline-block rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <button on:click={()=>{updatePublication({...dataPublication, describe, tags, userId}, editor, title, name, id, loading)}} class="flex rounded-md bg-gray-700 hover:bg-gray-500 px-8 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Modifier
+                            {#if loading}  
+                                <LoadingButton {loading} />
+                            {/if}
                         </button> 
                     {:else}
                         <button on:click={()=>{createPublication({...dataPublication, describe, tags, userId}, editor, imagePublication, name)}} 

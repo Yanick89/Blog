@@ -3,9 +3,13 @@ import { doc, setDoc, getDocs, updateDoc, collection, Timestamp, deleteDoc } fro
 import { ref, uploadBytes, getDownloadURL, deleteObject   } from "firebase/storage";
 import { navigate } from 'svelte-routing';
 import type { Publication } from '../../table';
+import toast, {Toaster} from 'svelte-french-toast';
+import { onMount } from 'svelte';
+
 
 let userId: string,
     imageOfPublication: any;
+
 
 export const createPublication = async (data: Publication, editorData: any, imagePublication: File, name: string) => {
    userId = data.userId
@@ -49,18 +53,27 @@ export const getPublicationAuthor = async () => {
     return newPublications    
 }
 
-export const updatePublication = async (data: Publication, editor: any, title: string, id: string) => {    
-    editor.save().then(async (outputData: any) => {
+export const updatePublication = async (data: Publication, editor: any, title: string, name: string, id: string, loading: boolean) => {    
+    editor.save()
+    .then(async (outputData: any) => {
         if(typeof data.imagePublication !== 'object') {
-            updateDoc (doc(db, "publications", id), {
+            updateDoc  (doc(db, "publications", id), {
                 title: title,
                 imagePublication: data.imagePublication,
                 tags: data.tags,
                 content: outputData,
                 describe: data.describe,
                 date: Timestamp.fromDate(new Date()) 
-            }); 
-        }  else {
+            })
+            .then(()=>{
+                toast.success('Modifcation de la publication effectuée!');
+                return new Promise(resolve => setTimeout(resolve, 1000));
+            })
+            .then(()=>{
+                navigate(`/user/${name}`, { replace: true });
+            }) 
+        }  
+        else {
             imageOfPublication = ref(storage, `Publications/imageOfPublication/${data.userId}/${data.imagePublication.name}`);
             await uploadBytes(imageOfPublication, data.imagePublication)
             .then(()=>{
@@ -74,11 +87,13 @@ export const updatePublication = async (data: Publication, editor: any, title: s
                         content: outputData,
                         describe: data.describe,
                         date: Timestamp.fromDate(new Date()) 
+                    }).then(()=>{
+                        navigate(`/user/${name}`, { replace: true });
                     })
                 })
             })            
         }    
-    })        
+    })       
 }
 
 export const deletePublication = async (id: string) => {

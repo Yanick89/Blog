@@ -2001,6 +2001,13 @@ svelte-check@^3.6.0:
     svelte-preprocess "^5.1.0"
     typescript "^5.0.3"
 
+svelte-french-toast@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-french-toast/-/svelte-french-toast-1.2.0.tgz#bfe3696ee1e3cbdee2a300e0153dede7d6d802eb"
+  integrity sha512-5PW+6RFX3xQPbR44CngYAP1Sd9oCq9P2FOox4FZffzJuZI2mHOB7q5gJBVnOiLF5y3moVGZ7u2bYt7+yPAgcEQ==
+  dependencies:
+    svelte-writable-derived "^3.1.0"
+
 svelte-hmr@^0.15.3:
   version "0.15.3"
   resolved "https://registry.npmjs.org/svelte-hmr/-/svelte-hmr-0.15.3.tgz"
@@ -2021,6 +2028,11 @@ svelte-routing@^2.10.0:
   version "2.10.0"
   resolved "https://registry.npmjs.org/svelte-routing/-/svelte-routing-2.10.0.tgz"
   integrity sha512-GM30MYs0WkTpWE6VaZV7Bl6bZmWD2vzEK4zrMQej131rpItdnqxfXTqSJFAT1I80C77XZKkjWuJeQKvBnQ2KXA==
+
+svelte-writable-derived@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-3.1.0.tgz#ea114125805a9d18398577f2431d1e8cdd4d8d69"
+  integrity sha512-cTvaVFNIJ036vSDIyPxJYivKC7ZLtcFOPm1Iq6qWBDo1fOHzfk6ZSbwaKrxhjgy52Rbl5IHzRcWgos6Zqn9/rg==
 
 svelte@^4.2.3:
   version "4.2.8"

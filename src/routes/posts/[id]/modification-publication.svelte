@@ -4,7 +4,7 @@
     import { toolsEditor } from "../../../lib/editor/editorDatas";
     import { getPublicationAuthor } from "../../../lib/publication/crudPublication";
     import Publication from "../../../lib/account/publication.svelte";
-
+    import { Toaster } from 'svelte-french-toast';
     export let id: string;
 
     let url: string = window.location.pathname,
@@ -59,8 +59,12 @@
     };
 
     $: watchData =  observeData(title, preview);
-    
+ 
 </script>
+
+<svelte:head>
+    <title>Modifier ma publication</title>
+</svelte:head>
 
 <HeaderNav {watchData} {showDetails} {url} {showPublication} {valueButton}/>
 
@@ -92,6 +96,7 @@
         </div>        
     </div>
 </div>
+<Toaster />
 
 {#if showDetails}
     <Publication {showDetails} {editor} {title} {imagePublication} {preview} {describe} {tags} {url} {id} on:close={() => showDetails = !showDetails}/>

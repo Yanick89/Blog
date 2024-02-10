@@ -51,7 +51,9 @@
         console.log(reason)
     });
 </script>
-
+<svelte:head>
+    <title>Editer ma publication</title>
+</svelte:head>
 <HeaderNav {watchData} {showDetails} {url} {showPublication} {valueButton}/>
 
 <div id="editorjs">
