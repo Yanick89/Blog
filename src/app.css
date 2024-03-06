@@ -27,6 +27,49 @@ body {
   text-align: center;
 }
 
+/* read editor style */
+pre{
+  overflow: auto hidden;
+  border: 1px solid #E5E5E5;
+  padding: 32px;
+  background: #F9F9F9;
+  border-radius: 5px;
+}
+.article-content p {
+  font-size: clamp(1.2rem, 1.2vw, 1.5rem);
+}
+.article-content h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+.article-content h1{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+}
+.article-content h2{
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.article-content h3{
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.article-content h4{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.article-content h5{
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.article-content h6{
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.article-content  a{
+  text-decoration: underline;
+}
+
 h1.ce-header{
   @apply text-3xl font-bold
 }

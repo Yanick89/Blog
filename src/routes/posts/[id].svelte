@@ -1,47 +1,77 @@
 <script lang="ts">
-    export let id: string;
-    import { UseTableData } from "../../table";
-
-    const { blogs, ListsCurrent, ListsTop } = UseTableData();
-    let postBlogs: any = {},
-        allPosts: any = [];
-
-    // on ajoute tous les tableaux dans un seul qui est destructuré
-    allPosts = [...blogs, ...ListsCurrent, ...ListsTop]    
+    import type { Publication } from "../../table";
+    import edjsHTML  from "editorjs-html";
+    import { getAllPublications } from "../../lib/publication/crudPublication";
+    import { getUser } from "../../lib/firebase/account/user/userInfos";
+    import Header from "../../lib/Header.svelte";
     
-    // On filtre le tableau qui contient tous les autres tableaux pour ensuite verifier le ID qui conrespond
-    // On definit en paramètre le type de données
-    const posts:Array<object> = allPosts.filter((post:{id: string, title: string, content: string, date: string, img: string, view: string})=>{
-            if(post.id === id){
-            return post
-        }
-    });
+    export let id: string;
 
-    // Une fois ID trouver, on parcours le tableau et on affecte à iteration dans un objet
-    posts.forEach((post)=>{ postBlogs = post })
+    const edjsParser = edjsHTML();
+    let html: any; 
+
+    let date: any
+
+    let userPhoto: string,
+        userName: string,
+        postBlogs: any = {};
+
+
+    getUser()
+    .then((user: any)=>{
+        userPhoto = user.imageUrl;
+        userName = user.name;
+        console.log("user infos: ", user)      
+    })
+
+    const dateConverted =(date: any)=>{
+        // date = new Date(date);
+        console.log("convertir les dates: ", typeof(date));
+        
+    }
+  
+    async function displayDatas (){
+        const allPubs = await getAllPublications();
+        console.log("all publications: ", allPubs);
+        
+        const posts:Array<object> = allPubs.filter((post: Publication)=>{
+                if(post.id === id){
+                return post
+            }
+            dateConverted(post.date)            
+        });
+
+        posts.forEach((post)=>{ postBlogs = post });
+        html = edjsParser.parse(postBlogs.content);    
+    }
+
+    displayDatas()
+
+    
 
 </script>
 
 <svelte:head>
-    <title>Post du Blog {postBlogs.title} </title>
+    <title> {postBlogs.title} </title>
 </svelte:head>
 
+<Header />
 
 <div class="read-post">
     <article class="flow">
         <div class="flex items-center gap-4">
-            <img src="https://source.unsplash.com/43x43/?user?1" alt="photo profil" class="w-10 h-10 bg-slate-600 rounded-full">
+            <img src={userPhoto} alt="photo profil" class="w-10 h-10 bg-slate-600 rounded-full">
             <div class="">
-                <span class="self-center text-xl font-medium">by Leroy Jenkins</span>
+                <span class="self-center text-xl font-medium"> {userName} </span>
                 <div class="flex items-center justify-between">
                     <div class="flex space-x-2 ">
-                        <span class="self-center text-sm text-slate-500">Dec 7· 4 min</span>
+                        <span class="self-center text-sm text-slate-500"> {date} </span>
                     </div>
                     <span class="text-xs text-slate-500">3 min read</span>
                 </div>
             </div>
         </div>
-        <div class="sticky bottom-6 inset-x-0 text-center">
+        <div class="sticky bottom-6 inset-x-0 text-left">
             <div class="inline-block bg-white shadow-md rounded-full py-3 px-4 dark:bg-gray-800">
                 <div class="flex items-center gap-x-1.5">
                     <div class="hs-tooltip inline-block">
@@ -67,10 +97,17 @@
             </div>
         </div>
         <hr>
-        <h1 class="text-2xl font-bold md:text-3xl dark:text-white">{postBlogs.title}</h1>
-        <img src={postBlogs.img} alt="" class="w-full object-cover rounded-xl">
+        <div class="space-y-2 head">
+            <h1 class="font-bold">{postBlogs.title}</h1>
+            {#if postBlogs.imagePublication}
+                <img src={postBlogs.imagePublication} alt="" class="w-full object-cover rounded-xl mb-5">
+            {/if}
+            <p class="text-gray-500 dark:text-gray-400">{postBlogs.describe}</p>
+        </div>
         <!-- start All content -->
-        {@html postBlogs.content}
+        <div class="article-content">
+            {@html html}
+        </div>
         <!-- End All content -->
         <div class="sticky bottom-0 inset-x-0 text-center">
             <div class="inline-block bg-white shadow-md rounded-full py-3 px-4 dark:bg-gray-800">
@@ -102,7 +139,7 @@
 
 <style>
     .read-post{
-        width: min(100% - 3rem, 65ch);
+        width: min(100% - 3rem, 80ch);
         margin-inline: auto;
         margin-top: 3rem;
     }
@@ -110,17 +147,15 @@
         margin-top: 2rem;
     }
     h1{
-        font-size: 3rem;
+        font-size: clamp(1.5rem, 5vw, 3rem);
+        font-weight: 700;
+        line-height: 1.1;
     }
-    h2{
-        font-size: 2rem;
-    }
-    h1, h2{
-        font-weight: 600;
-    }
+    
     p{
         line-height: 1.8;
         letter-spacing: -0.003em;
         color: rgb(31 41 55 / 1);
     }
+
 </style>

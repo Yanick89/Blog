@@ -3,11 +3,12 @@
 
 
   export let id: any;
+	export let authorId: string;
 	export let title: string;
 	export let content: string;
 	export let date: string;
-	export let img: string;
-	export let view: string;
+	export let imagePublication: string;
+	export let tags: [string];
   export let url: string = "";
 
 

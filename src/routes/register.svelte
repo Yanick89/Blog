@@ -2,7 +2,6 @@
   import WithOther from "../lib/WithOther.svelte";
   import { Link } from "svelte-routing";
   import { Register } from "../lib/auth/register/register";
-  import { authSocialMedia } from "../lib/auth/withSocialMedia/withSocialMedia";
   
   let email: string  ='',
       password: string = '',
@@ -56,13 +55,13 @@
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
             Nous avez pas un compte?
             <Link to="/signIn" class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="../examples/html/signin.html">
-              connectez-vous ici
+              Connectez-vous ici
             </Link>
           </p>
         <!-- End Form -->
         <div class="mt-4 py-6 flex items-center text-sm text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:me-6 after:flex-[1_1_0%] after:border-t after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Ou</div>
         <div class="grid w-[90%] max-w-[400px]">
-            <WithOther {value} on:click={() => authSocialMedia}/>
+            <WithOther {value} />
           </div>          
       </div>
     </div>

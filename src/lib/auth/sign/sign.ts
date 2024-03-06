@@ -1,14 +1,21 @@
 import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { navigate } from "svelte-routing";
+import { loading } from "../../store/store";
+import toast from 'svelte-french-toast';
 
 
 export function sign(){
-    const userSignIn = (email:string, password:string) =>{
+    const userSignIn = async (email:string, password:string) =>{
+        loading.set(true);
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            console.log('utilisateur:', user);
+            loading.set(false);
+            toast.success('Connexion reussie!')
+            return new Promise((resolve) => setTimeout(resolve, 1000))
+        })
+        .then(() => {
             navigate(`/`, { replace: true })
         })
         .catch((error) => {

@@ -1,8 +1,10 @@
 <script lang="ts">
     import Side from "../../lib/account/side.svelte";
     import Header from "../../lib/account/header.svelte";
-    import { navigate } from 'svelte-routing';
+    import { navigate, Router, Link } from 'svelte-routing';
     import { getPublicationAuthor, deletePublication } from "../../lib/publication/crudPublication";
+
+    export let url: string = "";
 
     let publications: any = [];
     const locale = navigator.language || navigator.userLanguage;
@@ -45,7 +47,12 @@
                     <img src=https://www.rbspraytech.com/wp-content/uploads/2014/02/placeholder-860x567.jpg} alt="" width="60" class="flex-none rounded-md bg-slate-100 min-h-[85px] aspect-[3/4] object-cover" />
                 {/if}
                 <div class="min-w-0 relative flex-auto">
-                <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2>
+                    <Router {url}>
+                        <Link to={`/blog/${publication.id}`} class="focus:outline-none hover:underline">
+                            <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2>
+                        </Link>
+                      </Router>
+                <!-- <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2> -->
                 <dl class="mt-2 flex flex-wrap flex-1 text-sm leading-6 font-medium">
 
                     <div>

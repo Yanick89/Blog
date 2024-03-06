@@ -35,9 +35,9 @@
             <PhotoProfile />
         </div>
         {#if userName === ''}
-        <span class="text-slate-500 font-medium text-lg ml-3">@{name}</span>
+            <span class="text-slate-500 font-medium text-lg ml-3">@{name}</span>
         {:else}
-        <span class="text-slate-500 font-medium text-lg ml-3">@{userName}</span>
+            <span class="text-slate-500 font-medium text-lg ml-3">@{userName}</span>
         {/if}
     </div>
     <span class="text-slate-500 font-normal text-base ml-3">{name}</span>

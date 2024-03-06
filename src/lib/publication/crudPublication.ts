@@ -1,14 +1,17 @@
 import { db, storage } from '../firebase/firebase';
-import { doc, setDoc, getDocs, updateDoc, collection, Timestamp, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getDocs, updateDoc, collection, Timestamp, deleteDoc, orderBy, query } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { navigate } from 'svelte-routing';
 import type { Publication } from '../../table';
 import toast from 'svelte-french-toast';
 import { loading } from '../store/store';
+import { getUser } from '../firebase/account/user/userInfos';
 
 
-let userId: string,
-    imageOfPublication: any;
+let userId: string;
+let imageOfPublication: any;  
+let publications: any = [];  
+
 
 export const createPublication = async (data: Publication, editorData: any, title: string, imagePublication: File, name: string) => {
    userId = data.userId
@@ -69,14 +72,18 @@ export const createPublication = async (data: Publication, editorData: any, titl
 }
 
 export const getPublicationAuthor = async () => {
-    let publications: any = [];
-    const querySnapshot = await getDocs(collection(db, "publications"));
+
+    const currentUser: any = await getUser();    
+    
+    const postsRef = collection(db, "publications")
+    const querySnapshot = await getDocs(query(postsRef, orderBy("date", "desc")));    
+    
     querySnapshot.forEach((doc) => {
-        publications.push(doc.data())        
-    })    
-    let newPublications = publications.map((publication: object) => {    
-        if(publication.authorId === userId) return publication
-        return publication
+        publications.push(doc.data())                
+    })
+
+    let newPublications = publications.filter((publication: object) => {            
+        if(publication.authorId === currentUser.id) return publication
     })
     return newPublications    
 }
@@ -140,10 +147,10 @@ export const deletePublication = async (id: string) => {
     await deleteDoc(doc(db, "publications", id));
 }
 
-// export const getAllPublications = async () => {
-//     const querySnapshot = await getDocs(collection(db, "publications"));
-//     querySnapshot.forEach((doc) => {
-//         console.log(doc.data());
-        
-//     })    
-// }
+export const getAllPublications = async () => {
+    const querySnapshot = await getDocs(collection(db, "publications"));
+    querySnapshot.forEach((doc) => {
+        publications.push(doc.data())
+    })
+    return publications    
+}

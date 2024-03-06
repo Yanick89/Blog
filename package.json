@@ -45,6 +45,7 @@
     "@editorjs/underline": "^1.1.0",
     "@editorjs/warning": "^1.4.0",
     "add": "^2.0.6",
+    "editorjs-html": "^3.4.3",
     "firebase": "^10.7.1",
     "svelte-french-toast": "^1.2.0",
     "yarn": "^1.22.21"

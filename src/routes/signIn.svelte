@@ -2,6 +2,8 @@
   import { sign } from "../lib/auth/sign/sign";
   import { Link } from "svelte-routing";
   import WithOther from "../lib/WithOther.svelte";
+  import LoadingButton from "../lib/component/loadingButton.svelte";
+  import { Toaster } from 'svelte-french-toast';
   
     let email: string  ='',
         password: string = '',
@@ -9,7 +11,7 @@
         { userSignIn } = sign();
         
   </script>
-  
+  <Toaster />
   <!-- Hero -->
   <div class="relative overflow-hidden min-h-screen max-x-w-full flex justify-between bg-[#f7f7f7]">
       <div class="flex-1">
@@ -33,7 +35,7 @@
                 <div class="flex items-center justify-between">
                   <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
                   <div class="text-sm">
-                    <a href="" class="font-semibold text-blue-500 hover:text-indigo-300">Mot de passe oublié?</a>
+                    <Link to="/register" class="font-semibold text-blue-500 hover:text-indigo-300">Mot de passe oublié?</Link>
                   </div>
                 </div>
                 <div class="mt-2">
@@ -42,7 +44,10 @@
               </div>
         
               <div>
-                <button type="submit" class="flex w-full justify-center rounded-md bg-gray-700 hover:bg-gray-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Connexion</button>
+                <button type="submit" class="flex w-full justify-center rounded-md bg-gray-700 hover:bg-gray-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                  Connexion
+                  <LoadingButton />
+                </button>
               </div>
             </form>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
