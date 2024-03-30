@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Publication } from "../../table";
+    import { navigate } from 'svelte-routing';
     import edjsHTML  from "editorjs-html";
     import { getAllPublications } from "../../lib/publication/crudPublication";
     import { getUser } from "../../lib/firebase/account/user/userInfos";
@@ -24,10 +25,8 @@
         console.log("user infos: ", user)      
     })
 
-    const dateConverted =(date: any)=>{
-        // date = new Date(date);
-        console.log("convertir les dates: ", typeof(date));
-        
+    const directionLink = (name: string) =>{       
+        navigate(`/user/${name.replace(" ", "-")}`, { replace: true })
     }
   
     async function displayDatas (){
@@ -37,8 +36,7 @@
         const posts:Array<object> = allPubs.filter((post: Publication)=>{
                 if(post.id === id){
                 return post
-            }
-            dateConverted(post.date)            
+            }          
         });
 
         posts.forEach((post)=>{ postBlogs = post });
@@ -62,12 +60,14 @@
         <div class="flex items-center gap-4">
             <img src={userPhoto} alt="photo profil" class="w-10 h-10 bg-slate-600 rounded-full">
             <div class="">
-                <span class="self-center text-xl font-medium"> {userName} </span>
+                <button type="button" on:click={() => directionLink(userName)}>
+                    <span class="self-center text-xl font-medium"> {userName} </span>
+                </button>
                 <div class="flex items-center justify-between">
                     <div class="flex space-x-2 ">
                         <span class="self-center text-sm text-slate-500"> {date} </span>
                     </div>
-                    <span class="text-xs text-slate-500">3 min read</span>
+                    <!-- <span class="text-xs text-slate-500">3 min read</span> -->
                 </div>
             </div>
         </div>

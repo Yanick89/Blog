@@ -32,7 +32,7 @@ export function Register() {
                 return new Promise((resolve) => setTimeout(resolve, 1000))
             })
             .then(()=>{
-                navigate(`/user/${name}`, { replace: true });  
+                navigate(`/user/${name.replace(' ', '-')}`, { replace: true });  
             })       
         })
         .catch((error) => {

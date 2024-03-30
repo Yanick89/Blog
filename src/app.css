@@ -37,6 +37,8 @@ pre{
 }
 .article-content p {
   font-size: clamp(1.2rem, 1.2vw, 1.5rem);
+  line-height: 32px;
+  letter-spacing: -0.003em;
 }
 .article-content h1, h2, h3, h4, h5, h6 {
   font-weight: 600;

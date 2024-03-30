@@ -11,7 +11,6 @@
 	export let tags: [string];
   export let url: string = "";
 
-
 </script>
 
 <Router {url}>

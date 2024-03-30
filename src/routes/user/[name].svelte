@@ -52,7 +52,6 @@
                             <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2>
                         </Link>
                       </Router>
-                <!-- <h2 class="font-semibold text-lg text-slate-900 truncate pr-20">{publication.title}</h2> -->
                 <dl class="mt-2 flex flex-wrap flex-1 text-sm leading-6 font-medium">
 
                     <div>

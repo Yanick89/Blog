@@ -4,43 +4,60 @@
     import Blogs from '../lib/blogs.svelte'
     import Header from '../lib/Header.svelte';
     import { getAllPublications } from "../lib/publication/crudPublication";
+    import { getAllUsers } from "../lib/firebase/account/user/userInfos";
     
 
-    // declarations
-    let message: string = '',
-      newMessage: string = '',
-      title: string = '',
-      current: number = 0,   
-      { blogs, ListsCurrent, ListsTop } = UseTableData();
-    let publications: any = [];
+    let  users: object = {
+        id: "",
+        name: ""
+    },
+    title: string = '', 
+    { blogs, ListsTop } = UseTableData(),
+    publications: any = [];
+    const options = {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    };
 
-  const addPost = () =>{
-    current = Math.floor(Math.random() * 10)
+    const infosUserAndPublications = async () =>{
+        const newTable: object[] = [];
+        const allPublications = await getAllPublications()
+        const allUsers = await getAllUsers()
 
-    const id = new Date().getTime().toString(),
-          currentDate = new Date(),
-          currentImage = 'https://source.unsplash.com/200x200/?fashion?' + current
-
-    const note: any = {
-      id: id,
-      title: title,
-      content: message,
-      date: currentDate,
-      img: currentImage,
-      view: '0'
+        // allPublications.forEach((publication: any) =>{
+        //     allUsers.filter((user: any) =>{
+        //         if(publication.userId === user.id){
+        //             console.log("user infos: ", user);                
+        //             // newTable.push({publication, user})
+        //         }
+        //     })           
+        // })
+        publications = allPublications.map(publication => {
+            const author = allUsers.find(user => {
+                if(user.id === publication.authorId){
+                    return user
+                }
+            });
+            return { ...publication, author };
+        });
+        console.log("les publications - 2: ", publications);
+        
+      
     }
-    blogs = [note, ...blogs]  
-    title = ''
-  }
-  getAllPublications()
+
+    infosUserAndPublications()
+
+    getAllPublications()
     .then((datas: any)=>{
         publications = datas;
         console.log("les publications - 1: ", publications);   
     });
+
 </script>
 <Header />
-<main>       
-     
+<main>            
     <div class="w-full max-w-2xl mx-6 mt-5 md:mx-auto">    
         
     </div>
@@ -76,8 +93,8 @@
     </section> 
     <div class="article flex flex-col md:flex-row gap-16">
         <div class="list-md flex-1">    
-            {#each publications as regular}    
-                <Blogs {...regular}>
+            {#each publications as publication} 
+                <Blogs {...publication}>
                     <div class="dark:bg-gray-800 dark:text-gray-50 list-left">
                         <div class="container flex items-center mx-auto dark:bg-gray-900">
                             <div class="flex flex-col p-6 col-span-full row-span-full lg:col-span-8 lg:p-10">
@@ -89,52 +106,24 @@
                                         <span class="self-center text-sm">by Leroy Jenkins</span>
                                     </div>
                                 </div>
-                                <h1 class="text-3xl font-semibold">Lorem ipsum dolor sit.</h1>
-                                <p class="flex-1 pt-2 text-slate-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, reprehenderit adipisci tempore voluptas laborum quod.</p>
-        
+                                <h1 class="text-3xl font-semibold">{publication.title}</h1>
+                                <p class="flex-1 pt-2 text-slate-500">{publication.describe}.</p>
                                 <div class="flex items-center justify-between pt-2">
                                     <div class="flex space-x-2">
-                                        <span class="self-center text-sm">Dec 7· 4 min</span>
+                                        <span class="self-center text-sm">{publication.date.toDate().toLocaleDateString("fr-FR", options)}</span>
                                     </div>
-                                    <span class="text-xs">3 min read</span>
+                                    <!-- <span class="text-xs">3 min read</span> -->
                                 </div>
                             </div>
-                            <div class="bg-no-repeat bg-cover dark:bg-gray-700 col-span-full lg:col-span-4 rounded-md h-32 w-36" style:background-image= "url('{regular.img}')" style="background-position: center center; background-blend-mode: multiply; background-size: cover;"></div>
+                            {#if publication.imagePublication}
+                                <div class="bg-no-repeat bg-cover dark:bg-gray-700 col-span-full lg:col-span-4 rounded-md h-32 w-36" style:background-image= "url('{publication.imagePublication}')" style="background-position: center center; background-blend-mode: multiply; background-size: cover;"></div>
+                            {/if}
                         </div>
                     </div>
                 </Blogs>
             {/each}
         </div>
-        <!-- <div class="list-md flex-1">    
-            {#each ListsCurrent as regular}    
-                <Blogs {...regular}>
-                    <div class="dark:bg-gray-800 dark:text-gray-50 list-left">
-                        <div class="container flex items-center mx-auto dark:bg-gray-900">
-                            <div class="flex flex-col p-6 col-span-full row-span-full lg:col-span-8 lg:p-10">
-                                <div class="flex justify-start">
-                                    <div class="flex space-x-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 dark:text-gray-400">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
-                                        </svg>
-                                        <span class="self-center text-sm">by Leroy Jenkins</span>
-                                    </div>
-                                </div>
-                                <h1 class="text-3xl font-semibold">Lorem ipsum dolor sit.</h1>
-                                <p class="flex-1 pt-2 text-slate-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, reprehenderit adipisci tempore voluptas laborum quod.</p>
-        
-                                <div class="flex items-center justify-between pt-2">
-                                    <div class="flex space-x-2">
-                                        <span class="self-center text-sm">Dec 7· 4 min</span>
-                                    </div>
-                                    <span class="text-xs">3 min read</span>
-                                </div>
-                            </div>
-                            <div class="bg-no-repeat bg-cover dark:bg-gray-700 col-span-full lg:col-span-4 rounded-md h-32 w-36" style:background-image= "url('{regular.img}')" style="background-position: center center; background-blend-mode: multiply; background-size: cover;"></div>
-                        </div>
-                    </div>
-                </Blogs>
-            {/each}
-        </div> -->
+
         <div class="list-sm basis-[100%] md:basis-2/5 sticky lg:w-full lg:h-full lg:bg-gradient-to-r lg:from-gray-50 lg:via-transparent lg:to-transparent dark:from-slate-800">
             {#each ListsTop as top, index }
                 <Blogs {...top}>

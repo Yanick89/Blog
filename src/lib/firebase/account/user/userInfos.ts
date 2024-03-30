@@ -29,10 +29,12 @@ export const getUser = () => {
 };
 
 export const getAllUsers = async () => {
+    const allUsers: User[] = [];
     const querySnapshot = await getDocs(collection(db, "users"));
     querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
+        allUsers.push(doc.data() as User)
     })
+    return allUsers
 }
 
 export const updateUser = async (updateData: Partial<User>, imageUrl: File) => {
