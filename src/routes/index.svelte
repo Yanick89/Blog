@@ -2,9 +2,10 @@
     // importations
     import { UseTableData } from '../table'
     import Blogs from '../lib/blogs.svelte'
+    import Header from '../lib/Header.svelte';
     import Top from '../lib/blog/topList.svelte';
     import CurrentList from '../lib/blog/currentList.svelte';
-    import Blog from './posts/blog.svelte'
+    import Blog from './posts/nouvelle-publication.svelte'
 
     // declarations
   let message: string = '',
@@ -32,7 +33,7 @@
     title = ''
   }
 </script>
-
+<Header />
 <main>       
      
     <div class="w-full max-w-2xl mx-6 mt-5 md:mx-auto">    

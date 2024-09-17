@@ -5,3 +5,43 @@ body {
   place-items: center; */
   min-height: 100vh;
 }
+
+.changer .content{
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: hsl(0deg 0% 0% / 85%);
+  border-radius: 5px;
+  padding: 10px;
+  transition: all .5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+.changer:hover .content{
+  display: block;
+  transition: display .5s ease-in;
+}
+.changer .content p, .changer .content svg{
+  color: white;
+  margin-inline: auto;
+  text-align: center;
+}
+
+h1.ce-header{
+  @apply text-3xl font-bold
+}
+h2.ce-header{
+  @apply text-2xl font-semibold
+}
+h3.ce-header{
+  @apply text-xl font-semibold
+}
+h4.ce-header{
+  @apply text-lg font-semibold
+}
+h5.ce-header{
+  @apply text-base font-semibold
+}
+h6.ce-header{
+  @apply text-base font-semibold
+}

@@ -1,26 +1,29 @@
 <script lang="ts">
-  import { Register } from "../lib/auth/register/register";
   import WithOther from "../lib/WithOther.svelte";
+  import { Link } from "svelte-routing";
+  import { Register } from "../lib/auth/register/register";
+  import { authSocialMedia } from "../lib/auth/withSocialMedia/withSocialMedia";
   
   let email: string  ='',
       password: string = '',
       name: string = '',
+      value: string = 'Continue avec Google',
       { userRegister } = Register()
       
 </script>
 
 <!-- Hero -->
-<div class="relative overflow-hidden">
-    <div class="mx-auto max-w-screen-md py-12 px-4 sm:px-6 md:max-w-screen-xl md:py-20 lg:py-32 md:px-8">
-      <div class="md:pe-8 md:w-1/2 xl:pe-0 xl:w-2/6">
+<div class="relative overflow-hidden min-h-screen max-x-w-full flex justify-between bg-[#f7f7f7]">
+    <div class="flex-1">
+      <div class="w-full h-full max-w-7xl mx-auto flex flex-col items-center justify-center">
         <!-- Title -->
-        <h1 class="text-3xl my-5 text-center text-gray-800 font-bold md:text-4xl md:leading-tight lg:text-5xl lg:leading-tight dark:text-gray-200">
-          Rejoind-nous
+        <h1 class="text-2xl my-5 text-center text-gray-800 font-bold md:text-3xl md:leading-tight lg:text-4xl lg:leading-tight dark:text-gray-200">
+          Rejoind-nous sur SCIENCES-Ga
         </h1>
         <!-- End Title -->
   
         <!-- Form -->
-        <form class="space-y-6" on:submit|preventDefault={userRegister(email, password, name)}>
+        <form class="space-y-6 w-[90%] max-w-[400px]" on:submit|preventDefault={userRegister(email, password, name)}>
             <div>
               <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nom</label>
               <div class="mt-2">
@@ -50,15 +53,21 @@
               <button type="submit" class="flex w-full justify-center rounded-md bg-gray-700 hover:bg-gray-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Inscription</button>
             </div>
           </form>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+            Nous avez pas un compte?
+            <Link to="/signIn" class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="../examples/html/signin.html">
+              connectez-vous ici
+            </Link>
+          </p>
         <!-- End Form -->
-        <div class="mt-8 py-6 flex items-center text-sm text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:me-6 after:flex-[1_1_0%] after:border-t after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Ou</div>
-        <div class="grid">
-            <WithOther />
+        <div class="mt-4 py-6 flex items-center text-sm text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:me-6 after:flex-[1_1_0%] after:border-t after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Ou</div>
+        <div class="grid w-[90%] max-w-[400px]">
+            <WithOther {value} on:click={() => authSocialMedia}/>
           </div>          
       </div>
     </div>
   
-  <div class="hidden md:block md:absolute md:top-0 md:start-1/2 md:end-0 h-full bg-[url('https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1981&q=80')] bg-no-repeat bg-center bg-cover"></div>
+  <div class="hidden md:block flex-1 h-screen w-full bg-[url('https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1981&q=80')] bg-no-repeat bg-center bg-cover"></div>
   <!-- End Col -->
 </div>
 <!-- End Hero -->

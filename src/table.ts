@@ -8,9 +8,25 @@ export interface IsBlogs {
 }
 export interface User{
   id: string,
-  imageUrl: string,
-  name: string,
-  userName: string
+  imageUrl?: string,
+  name?: string,
+  aboutMe?: string,
+  userName?: string,
+  linkedin?: string,
+  facebook?: string,
+  twitterX?: string,
+  youtube?: string
+}
+
+export interface Publication{
+  id: string,
+  userId: string,
+  title?: string,
+  imagePublication?: any,
+  content: any,
+  tags?: string[],
+  describe?: string,
+  date: string
 }
 
 export function UseTableData () {
